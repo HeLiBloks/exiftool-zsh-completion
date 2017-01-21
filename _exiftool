@@ -1,12 +1,25 @@
 #compdef exiftool
-#see /usr/share/zsh/functions/Completion/Unix 
-
-
+# exiftool-zsh-completion (C) by Henrik Lindgren henrikprojekt@gmail.com
+#
+# It is free software; you can redistribute it and/or modify it under the terms of either:
+#
+# a) the GNU General Public License as published by the Free Software Foundation;
+#    either external linkversion 1, or (at your option) any later versionexternal link, or
+#
+# b) the "Artistic License".
 
 local -a writemode listx list charset lang list_arguments fast overwrite
-writemode=( 'w:Write existing tags' 'c:Create new tags' 'g:create new Groups as necessary')
 
-listx=( '-s:shorten output omit description and values' '-f:add flags attribute' )
+writemode=(
+'w:Write existing tags'
+'c:Create new tags'
+'g:create new Groups as necessary'
+)
+
+listx=(
+'-s:shorten output omit description and values'
+'-f:add flags attribute'
+)
 
 list=( 
 '-XMP\:All:list all xmp tags'
@@ -62,8 +75,6 @@ overwrite=(
 '+:append to existing file'
 )
 
-
-# '-list[list all tag names]:listargs:{_describe 'values' list}'
 args=(
 '-[TAG\[+|-|=<\]]'
 '--[exclude TAG]'
@@ -161,33 +172,19 @@ args=(
 '-userParam[Set user parameter (API UserParam opt)]'
 	)
 
-
-_arguments $args '*:file:_path_files -W $PWD'
-
-
-_tagGroupnames() {
-
-}
-
-_listTagsInFile() {
-	exiftool "$1"
-}
-
-_writeableTags() {
-	exiftool -listw
-}
+_arguments $args '*:file:_files'
 
 if [[ "$state" = tagGroups ]]; then
   local -a taggroup
-  taggroup=($(exiftool -listg0 -listg1 -listg2 -listg3 -listg4|grep -oP '(?!.*[:])[a-zA-Z0-9-_#]+'))
-  # compadd -P "-" -S ":" -X 'Taggroup' -a $taggroup
+  taggroup=($(exiftool -listg0 -listg1 -listg2 -listg3 -listg4 | grep -oP '(?!.*[:])[a-zA-Z0-9-_#]+'))
   compadd -S ":" -P "-" 'TagGroups' -a $taggroup
 fi
 
-if [[ "$state" = tagGroupsInfile ]]; then
-  local -a taggroupInfile
-  taggroupInfile=($(exiftool -argFormat $file))
-  compadd 'TagGroupsInfile' -a $taggroupInfile
-fi
+#:TODO add a regexcompletion func that pulls candidates from file on cmd line
+# if [[ "$state" = tagGroupsInfile ]]; then
+  # local -a taggroupInfile
+  # taggroupInfile=($(exiftool -argFormat $file))
+  # compadd 'TagGroupsInfile' -a $taggroupInfile
+# fi
 
-#  vim: set ts=4 sw=4 tw=0 foldenable foldmethod=syntax foldclose=all nowrap :tagGroups
+#  vim: set ts=4 sw=4 tw=0 foldenable foldmethod=syntax foldclose=all nowrap :
