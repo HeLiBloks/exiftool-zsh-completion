@@ -1,0 +1,193 @@
+#compdef exiftool
+#see /usr/share/zsh/functions/Completion/Unix 
+
+
+
+local -a writemode listx list charset lang list_arguments fast overwrite
+writemode=( 'w:Write existing tags' 'c:Create new tags' 'g:create new Groups as necessary')
+
+listx=( '-s:shorten output omit description and values' '-f:add flags attribute' )
+
+list=( 
+'-XMP\:All:list all xmp tags'
+'-EXIF\:All:list all Exif tags'
+'-gps\:'
+)
+
+charset=(
+'UTF8:cp65001, UTF-8 UTF-8 characters (default)'
+'Latin:cp1252, Latin1 Windows Latin1 (West European)'
+'Latin2:cp1250 Windows Latin2 (Central European)'
+'Cyrillic:cp1251,Russian Windows Cyrillic'
+'Greek:cp1253 Windows Greek'
+'Turkish:cp1254 Windows Turkish'
+'Hebrew:cp1255 Windows Hebrew'
+'Arabic:cp1256 Windows Arabic'
+'Baltic:cp1257 Windows Baltic'
+'Vietnam:cp1258 Windows Vietnamese'
+'Thai:cp874 Windows Thai'
+'MacRoman:cp10000, Roman Macintosh Roman'
+'MacLatin2:cp10029 Macintosh Latin2 (Central Europe)'
+'MacCyrillic:cp10007 Macintosh Cyrillic'
+'MacGreek:cp10006 Macintosh Greek'
+'MacTurkish:cp10081 Macintosh Turkish'
+'MacRomanian:cp10010 Macintosh Romanian'
+'MacIceland:cp10079 Macintosh Icelandic'
+'MacCroatian:cp10082 Macintosh Croatian'
+)
+
+lang=(
+ 'cs:Czech (Čeština)'
+ 'de:German (Deutsch)'
+ 'en:English'
+ 'en-ca:Canadian English'
+ 'en-gb:British English'
+ 'es:Spanish (Español)'
+ 'fi:Finnish (Suomi)'
+ 'fr:French (Français)'
+ 'it:Italian (Italiano)'
+ 'ja:Japanese (日本語)'
+ 'ko:Korean (한국어)'
+ 'nl:Dutch (Nederlands)'
+ 'pl:Polish (Polski)'
+ 'ru:Russian (Русский)'
+ 'sv:Swedish (Svenska)'
+ 'tr:Turkish (Türkçe)'
+ 'zh-cn:Simplified Chinese (简体中文)'
+ 'zh-tw:Traditional Chinese (繁體中文)'
+  )
+
+overwrite=(
+'!:overwrite existing file'
+'+:append to existing file'
+)
+
+
+# '-list[list all tag names]:listargs:{_describe 'values' list}'
+args=(
+'-[TAG\[+|-|=<\]]'
+'--[exclude TAG]'
+'-fast-[Increase speed of extracting information from JPEG images]:arg:((
+	2\:"causes exiftool to avoid extracting any EXIF MakerNote information"
+	3\:"avoids processing the file entirely, and returns only an initial guess at FileType and the pseudo System tags"
+))'
+'-if[Specify a condition to be evaluated before processing each FILE. -ifEXPR is a Perl-like logic expression containing tag]'
+'-lang[Set current language]:lang:{_describe 'values' lang}'
+'-charset[Specify encoding for special characters]:charset:{_describe 'values' charset}'
+'-listg-[list all groups in family nr]:family:(0 1 2 3 4)'
+'(-i -ignore)'{-i,-ignore}"[Ignore specified directory name]:directory:_directories"
+'(-v- -verbose-)'{-v-,-verbose-}'[Print verbose messages]:nr:(0 1 2 3 4 5)'
+'-wm[Set mode for writing/creating tags]:tags:{_describe 'values' writemode}'
+'-list[list all tag names]:listargs:->tagGroups'
+'-listx[list database of specified tags in XML format]:listargs:{_describe 'values' list -- listx -- _tagGroupnames }'
+'-@[Read command-line arguments from file]:filename:_files'
+'-config[Specify configuration file name]:file:_files'
+'(-W- -tagOut-)'{-W-,-tagOut-}'[Write output text file for each tag]:argument:{_describe 'values' overwrite}'
+'(-w- -textOut-)'{-w-,-textOut-}'[Write console output to files with names ending in EXT, one for each source file]:argument:{_describe 'values' overwrite}'
+'(-s- -short-)'{-s-,-short-}'[Short output format]:shortarguments:((
+	1\:"print tag names instead of descriptions"
+	2\:"no extra spaces to column-align values"
+	3\:"print values only no tag names"
+))'
+'(-o -out)'{-o,-out}'[OUTFILE may be "-" for stdout]:filename:_files'
+'-echo-[Echo text to stdout or stderr]:nr:(1 2)'
+'(-U -unknown2)'{-U,-unknown2}'[Extract values of unknown tags as well as unknown information from some binary data blocks]'
+'(-z -zip)'{-z,-zip}'[Causes information to be extracted from .gz and .bz2 compressed images]'
+'(-k -pause)'{-k,-pause}'[Pause with the message -- press any key -- or -- press RETURN -- before terminating]'
+'(-n --printConv)'{-n,--printConv}'[Read/write numerical tag values]'
+'(-p -printFormat)'{-p,-printFormat}'[Print output in specified format]'
+'-tagsFromFile[Copy tag values from file]:filename:_files'
+'(-x -exclude)'{-x,-exclude}'[Exclude the specified tag. There may be multiple -x options. This has the same effect as --TAG on the command line]'
+'(-args -argFormat)'{-args,-argFormat}'[Format metadata as exiftool arguments, suitable for use with the -@ option when writing.]'
+'-b[Output metadata in binary format]'
+'-c[Set format for GPS coordinates]'
+'-csv[Export/import tags in CSV format]'
+'-d[Set format for date/time values]'
+'-D[Show tag ID numbers in decimal]'
+'-E[excmd]'
+'-f[Force printing of all specified tags]'
+'(-g -groupHeadings)'{-g,-groupHeadings}'[Organize output by tag group]'
+'(-G -groupNames)'{-G,-groupNames}'[Print group name for each tag]'
+'(-h -htmlForat)'{-h,-htmlForat}'[Use HMTL formatting for output]'
+'(-H -hex)'{-H,-hex}'[Show tag ID number in hexadecimal]'
+'-htmlDump[Generate HTML-format binary dump]'
+'-j[Export/import tags in JSON format]'
+'-l[Use long 2-line output format]'
+'-L[Use Windows Latin1 encoding]'
+'-listItem[Extract specific item with nr from a list]'
+'-php[Export tags as a PHP Array]'
+'-S[Very short output format]'
+'(-sep -separator)'{-sep,-separator}'[Set separator string for list items]'
+'(-sort --sort)'{-sort,--sort}'[Sort output alphabetically]'
+'(-struct --struct)'{-struct,--struct}'[Output structured XMP information instead of flattening to individual tags]'
+'(-t -tab)'{-t,-tab}'[Output in tab-delimited list format]'
+'(-T -table)'{-T,-table}'[Output tag values in table form. Equivalent to -t -S -q -f]'
+'-Wext[Write only specified file types with -W]'
+'-X[Use RDF/XML output format]'
+'-k[Pause before terminating]'
+'-ver[Print exiftool version number]'
+'-listd[list all deletable groups]'
+'-listf[list all supported file extensions]'
+'-listr[list all recognized file extensions]'
+'-listw[list all writable tags]'
+'-listwf[list all writable file extensions]'
+'-use[Add features from plug-in module]'
+'-geotag[Geotag images from specified GPS log]'
+'-globalTimeShift[Shift all formatted date/time values]'
+'(-r -recurse)'{-r,-recurse}'[Recursively process subdirectories]'
+'(-m -ignoreMinorErrors)'{-m,-ignoreMinorErrors}'[Ignore minor errors and warnings]'
+'(-P -preserve)'{-P,-preserve}'[Preserve date/time of original file]'
+'-progress[Show file progress count]'
+'-scanForXMP[Brute force XMP scan]'
+'-overwrite_original[Overwrite original by renaming tmp file]'
+'-overwrite_original_in_place[Overwrite original by copying tmp file]'
+'-password[Password for processing protected files]'
+'(-e --composite)'{-e,--composite}'[Do not calculate composite tags]'
+'(-ee -extractEmbedded)'{-ee,-extractEmbedded}'[Extract information from embedded files]'
+'(-ext -extension)'{-ext,-extension}'[Process files with specified extension]'
+'--ext[Process files without specified extension]'
+'(-F -fixBase)'{-F,-fixBase}'[Fix the base for maker notes offsets]'
+'(-m -ignoreMinorErrors)'{-m,-ignoreMinorErrors}'[Ignore minor errors and warnings]'
+'-fileOrder[Set file processing order]'
+'(-a -duplicates)'{-a,-duplicates}'[Allow duplicate tag names to be extracted. By default, duplicate tags are suppressed]'
+'(--a --duplicates)'{--a,--duplicates}'[Suppress duplicate tag names to be extracted. By default, duplicate tags are suppressed]'
+'-delete_original[Delete "_original" backups]'
+'-restore_original[Restore from "_original" backups]'
+'-api[Set ExifTool API option]'
+'-common_args[Define common arguments]'
+'-execute[Execute multiple commands on one line]'
+'-srcfile[Set different source file name]:file:_files'
+'-stay_open[Keep reading -@ argfile even after EOF]'
+'-userParam[Set user parameter (API UserParam opt)]'
+	)
+
+
+_arguments $args '*:file:_path_files -W $PWD'
+
+
+_tagGroupnames() {
+
+}
+
+_listTagsInFile() {
+	exiftool "$1"
+}
+
+_writeableTags() {
+	exiftool -listw
+}
+
+if [[ "$state" = tagGroups ]]; then
+  local -a taggroup
+  taggroup=($(exiftool -listg0 -listg1 -listg2 -listg3 -listg4|grep -oP '(?!.*[:])[a-zA-Z0-9-_#]+'))
+  # compadd -P "-" -S ":" -X 'Taggroup' -a $taggroup
+  compadd -S ":" -P "-" 'TagGroups' -a $taggroup
+fi
+
+if [[ "$state" = tagGroupsInfile ]]; then
+  local -a taggroupInfile
+  taggroupInfile=($(exiftool -argFormat $file))
+  compadd 'TagGroupsInfile' -a $taggroupInfile
+fi
+
+#  vim: set ts=4 sw=4 tw=0 foldenable foldmethod=syntax foldclose=all nowrap :tagGroups
