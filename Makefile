@@ -1,6 +1,10 @@
+SHELL:=/bin/zsh
+
 
 install:
-	cp -f _exiftool /usr/share/zsh/vendor-completions/_exiftool
+	[ "$$fpath" \=~ '[^ ]*zsh[1-9]?\/vendor-completions'  ] && cp -f _exiftool $$MATCH
 
 uninstall:
-	rm -f /usr/share/zsh/vendor-completions/_exiftool
+	[ "$$fpath" \=~ '[^ ]*zsh[1-9]?\/vendor-completions'  ] && rm -f $$MATCH/_exiftool
+
+
